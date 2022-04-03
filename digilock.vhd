@@ -4,7 +4,7 @@
 -- 
 -- Create Date: 03/28/2022 03:58:14 PM
 -- Design Name: 
--- Module Name: DigiLock - Behavioral
+-- Module Name: digilock - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -31,7 +31,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity DigiLock is
+entity digilock is
     Port ( 
         clk: in std_logic;
         reset: in std_logic;
@@ -47,9 +47,9 @@ entity DigiLock is
         SEG2: out std_logic_vector(3 downto 0);
         SEG3: out std_logic_vector(3 downto 0)
     );
-end DigiLock;
+end digilock;
 
-architecture Behavioral of DigiLock is
+architecture Behavioral of digilock is
 
     type Etat is (Init, waiting, E0, E1, E2, Ouvert, Alarme, Alarm_0);
     --type Alarm_state is (Alarm_init, alarm_i0, alarm_i1);
@@ -84,13 +84,13 @@ architecture Behavioral of DigiLock is
     signal pressed_value: std_logic_vector(3 downto 0) := "0000";   
 
 begin
-    --U1: DEBOUNCE port map(clk => clk, button => A, result => debounced_A);
-    --U2: DEBOUNCE port map(clk => clk, button => B, result => debounced_B);
-    --U3: DEBOUNCE port map(clk => clk, button => C, result => debounced_C);
-    U1: pulse_generator port map(clk => clk, reset => debounce_reset,  input => A, output => unique_A);
-    U2: pulse_generator port map(clk => clk, reset => debounce_reset,  input => B, output => unique_B);
-    U3: pulse_generator port map(clk => clk, reset => debounce_reset,  input => C, output => unique_C);
-    U4: DEBOUNCE port map(clk => clk, button => reset, result => debounce_reset);
+    --U1: DEBOUNCE port map(clk => clk, button => A, result => unique_A);
+    --U2: DEBOUNCE port map(clk => clk, button => B, result => unique_B);
+    --U3: DEBOUNCE port map(clk => clk, button => C, result => unique_C);
+    U2: pulse_generator port map(clk => clk, reset => debounce_reset,  input => A, output => unique_A);
+    U3: pulse_generator port map(clk => clk, reset => debounce_reset,  input => B, output => unique_B);
+    U4: pulse_generator port map(clk => clk, reset => debounce_reset,  input => C, output => unique_C);
+    U5: DEBOUNCE port map(clk => clk, button => reset, result => debounce_reset);
         
     process (clk, debounce_reset)
     begin        
@@ -114,6 +114,7 @@ begin
         end if;
     end process;
     
+    -- TODO: ajouter reset 
     process (pressed_value) 
         variable entree_0: std_logic_vector(3 downto 0);
         variable entree_1: std_logic_vector(3 downto 0);
